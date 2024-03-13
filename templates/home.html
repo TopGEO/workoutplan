@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="jumbotron">
+    {% if user.is_authenticated %}
+        {% if workout_plan %}
+            <h2>{{ workout_plan.user.username }}'s Workout Plan</h2>
+            <p>Frequency: {{ workout_plan.workout_frequency }} days/week</p>
+            <p>Goal: {{ workout_plan.get_workout_goal_display }}</p>
+            <p>Current Level: {{ workout_plan.get_current_level_display }}</p>
+            {% for day in workout_plan.workout_days.all %}
+                <h3>Day {{ day.day_number }}</h3>
+                <ul>
+                    {% for exercise in day.day_exercises.all %}
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#exerciseModal{{ exercise.id }}">{{ exercise.exercise.name }}</a>
+                            - Sets: {{ exercise.sets }}, Reps: {{ exercise.reps }}
+                            <!-- Modal -->
+                            <div class="modal fade" id="exerciseModal{{ exercise.id }}" tabindex="-1" role="dialog" aria-labelledby="exerciseModalLabel{{ exercise.id }}" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exerciseModalLabel{{ exercise.id }}">{{ exercise.exercise.name }}</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p><strong>Description:</strong> {{ exercise.exercise.description }}</p>
+                                            <p><strong>Instructions:</strong> {{ exercise.exercise.instructions }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+            <p><a href="{% url 'reset_workout_plan' %}" class="btn btn-warning">Reset My Plan</a></p>
+        {% else %}
+            <h1 class="display-4">Welcome to our website!</h1>
+            <p class="lead">Your adventure starts now.</p>
+            <hr class="my-4">
+            <p>Explore our features and enjoy your journey.</p>
+            <a href="{% url 'create_workout_plan' %}" class="btn btn-primary">Create Workout Plan!</a>
+        {% endif %}
+    {% else %}
+        <h1 class="display-4">Welcome to our website!</h1>
+        <p class="lead">Your adventure starts now.</p>
+        <hr class="my-4">
+        <p>Explore our features and enjoy your journey.</p>
+        <p><a href="{% url 'login' %}">Log In</a> or <a href="{% url 'signup' %}">Sign Up</a> to get personalized plan!</p>
+    {% endif %}
+</div>
+
+<!-- Bootstrap's JavaScript -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+{% endblock %}
+    

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">{{ workout_plan.user.username }}'s Workout Plan</h1>
+    <p class="lead">Here's a detailed overview of your current workout plan.</p>
+    <hr class="my-4">
+    <ul class="list-unstyled">
+        <li><strong>Frequency:</strong> {{ workout_plan.workout_frequency }} days/week</li>
+        <li><strong>Goal:</strong> {{ workout_plan.get_workout_goal_display }}</li>
+        <li><strong>Current Level:</strong> {{ workout_plan.get_current_level_display }}</li>
+    </ul>
+
+    {% for day in workout_days %}
+        <div>
+            <h3>Day {{ day.day_number }}</h3>
+            <ul>
+                {% for exercise in day.day_exercises.all %}
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#exerciseModal{{ exercise.id }}">{{ exercise.exercise.name }}</a>
+                        - Sets: {{ exercise.sets }}, Reps: {{ exercise.reps }}
+                        <!-- Modal -->
+                        <div class="modal fade" id="exerciseModal{{ exercise.id }}" tabindex="-1" role="dialog" aria-labelledby="exerciseModalLabel{{ exercise.id }}" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exerciseModalLabel{{ exercise.id }}">{{ exercise.exercise.name }}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><strong>Description:</strong> {{ exercise.exercise.description }}</p>
+                                        <p><strong>Instructions:</strong> {{ exercise.exercise.instructions }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- Bootstrap's JavaScript -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Few steps are left!</h1>
+    {% if user.is_authenticated %}
+        <p class="lead">{{ user.username }}, to create a personalized workout plan that fits your goals and current fitness level, we need a few details from you</p>
+        <!-- Updated the action to post to the 'create_workout_plan' view -->
+        <form method="post" action="{% url 'create_workout_plan' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Create Plan</button>
+        </form>
+    {% else %}
+        <p class="lead">Register to get your own personalized workout plan.</p>
+        <a href="{% url 'signup' %}" class="btn btn-primary">Sign Up</a>
+    {% endif %}
+</div>
+{% endblock content %}
